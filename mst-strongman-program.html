@@ -3,851 +3,370 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MST Systems — Enter Strongman</title>
+<title>12-Week Strength — Squat / Bench / DL / OHP</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap');
-
-  :root {
-    --black: #0d0d0d;
-    --dark: #161616;
-    --card: #1e1e1e;
-    --border: #2e2e2e;
-    --accent: #e8c84a;
-    --accent2: #c44a2a;
-    --text: #e8e4de;
-    --muted: #888;
-    --green: #4aac6e;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--black);
-    color: var(--text);
-    font-family: 'Barlow', sans-serif;
-    font-size: 14px;
-    min-height: 100vh;
-  }
-
-  header {
-    background: var(--dark);
-    border-bottom: 3px solid var(--accent);
-    padding: 16px 20px 12px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-
-  .header-inner {
-    max-width: 960px;
-    margin: 0 auto;
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .logo {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 900;
-    font-size: 22px;
-    letter-spacing: 0.04em;
-    color: var(--accent);
-    text-transform: uppercase;
-  }
-
-  .subtitle {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    color: var(--muted);
-    text-transform: uppercase;
-  }
-
-  .main {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 20px 12px 60px;
-  }
-
-  /* Week selector */
-  .week-nav {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
-  }
-
-  .week-btn {
-    background: var(--card);
-    border: 1.5px solid var(--border);
-    color: var(--muted);
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: 0.06em;
-    padding: 6px 12px;
-    cursor: pointer;
-    border-radius: 3px;
-    transition: all 0.15s;
-    text-transform: uppercase;
-  }
-
-  .week-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .week-btn.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--black);
-  }
-
-  /* Day tabs */
-  .day-tabs {
-    display: flex;
-    gap: 0;
-    margin-bottom: 0;
-    border-bottom: 2px solid var(--border);
-    overflow-x: auto;
-  }
-
-  .day-tab {
-    background: none;
-    border: none;
-    border-bottom: 3px solid transparent;
-    margin-bottom: -2px;
-    color: var(--muted);
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: 0.08em;
-    padding: 10px 18px;
-    cursor: pointer;
-    white-space: nowrap;
-    text-transform: uppercase;
-    transition: all 0.15s;
-  }
-
-  .day-tab:hover { color: var(--text); }
-  .day-tab.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-  }
-
-  .day-panel {
-    background: var(--card);
-    border: 1.5px solid var(--border);
-    border-top: none;
-    border-radius: 0 0 4px 4px;
-    overflow: hidden;
-  }
-
-  /* Table */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  thead {
-    background: #111;
-  }
-
-  thead th {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
-    padding: 10px 12px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
-  }
-
-  tbody tr {
-    border-bottom: 1px solid #242424;
-    transition: background 0.1s;
-  }
-
-  tbody tr:last-child { border-bottom: none; }
-  tbody tr:hover { background: rgba(232,200,74,0.04); }
-
-  tbody td {
-    padding: 10px 12px;
-    vertical-align: top;
-    line-height: 1.45;
-  }
-
-  .exercise-name {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-    color: var(--text);
-    letter-spacing: 0.02em;
-  }
-
-  .exercise-detail {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 2px;
-    font-style: italic;
-  }
-
-  .badge {
-    display: inline-block;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: 0.04em;
-    color: var(--accent);
-    white-space: nowrap;
-  }
-
-  .weight-cell {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    color: var(--green);
-    white-space: nowrap;
-  }
-
-  .rest-cell {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 600;
-    font-size: 12px;
-    color: var(--muted);
-    white-space: nowrap;
-  }
-
-  .notes-cell {
-    font-size: 12px;
-    color: #aaa;
-    max-width: 280px;
-    line-height: 1.5;
-  }
-
-  .notes-cell ul {
-    padding-left: 14px;
-    margin-top: 4px;
-  }
-
-  .notes-cell li {
-    margin-bottom: 2px;
-  }
-
-  /* Log input */
-  .log-cell {
-    white-space: nowrap;
-    min-width: 130px;
-  }
-
-  .log-wrap {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-
-  .log-input {
-    background: #111;
-    border: 1.5px solid var(--border);
-    color: var(--text);
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    padding: 5px 8px;
-    border-radius: 3px;
-    width: 80px;
-    transition: border-color 0.15s;
-    outline: none;
-  }
-
-  .log-input::placeholder { color: #444; font-weight: 400; font-size: 12px; }
-  .log-input:focus { border-color: var(--accent); }
-  .log-input.saved { border-color: var(--green); color: var(--green); }
-
-  .log-btn {
-    background: var(--border);
-    border: none;
-    color: var(--muted);
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 12px;
-    padding: 5px 9px;
-    border-radius: 3px;
-    cursor: pointer;
-    transition: all 0.15s;
-    letter-spacing: 0.04em;
-    flex-shrink: 0;
-  }
-
-  .log-btn:hover { background: var(--accent); color: var(--black); }
-  .log-btn.saved-btn { background: rgba(74,172,110,0.15); color: var(--green); }
-
-  .log-note {
-    font-size: 10px;
-    color: var(--muted);
-    margin-top: 3px;
-    font-style: italic;
-  }
-
-  /* Week button with logged indicator */
-  .week-btn .logged-dot {
-    display: inline-block;
-    width: 5px;
-    height: 5px;
-    background: var(--green);
-    border-radius: 50%;
-    margin-left: 4px;
-    vertical-align: middle;
-    margin-top: -2px;
-  }
-
-  .new-cue {
-    display: inline-block;
-    background: rgba(196,74,42,0.15);
-    color: var(--accent2);
-    font-size: 10px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    padding: 1px 5px;
-    border-radius: 2px;
-    text-transform: uppercase;
-    margin-left: 4px;
-    vertical-align: middle;
-  }
-
-  /* Week summary bar */
-  .week-summary {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 14px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .week-label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 900;
-    font-size: 28px;
-    letter-spacing: 0.02em;
-    color: var(--text);
-    line-height: 1;
-  }
-
-  .week-theme {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    letter-spacing: 0.12em;
-    color: var(--muted);
-    text-transform: uppercase;
-    border-left: 2px solid var(--border);
-    padding-left: 10px;
-    margin-left: 2px;
-    align-self: center;
-  }
-
-  /* Key section */
-  .key-bar {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    background: var(--dark);
-    border: 1.5px solid var(--border);
-    border-radius: 4px;
-    padding: 10px 14px;
-    margin-bottom: 16px;
-    font-size: 11px;
-    color: var(--muted);
-  }
-
-  .key-item { display: flex; align-items: center; gap: 5px; }
-  .key-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
-
-  /* Mobile adjustments */
-  @media (max-width: 600px) {
-    .notes-cell { display: none; }
-    .notes-col { display: none; }
-    .day-tab { padding: 10px 12px; font-size: 12px; }
-    .log-input { width: 65px; }
-  }
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap');
+:root{--bg:#0d0d0d;--dark:#161616;--card:#1e1e1e;--border:#2e2e2e;--acc:#e8c84a;--red:#c44a2a;--text:#e8e4de;--muted:#777;--green:#4aac6e;--blue:#5a8fd0;--orange:#d47c2a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:14px;min-height:100vh}
+header{background:var(--dark);border-bottom:3px solid var(--acc);padding:13px 20px;position:sticky;top:0;z-index:100}
+.hdr{max-width:980px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;letter-spacing:.04em;color:var(--acc);text-transform:uppercase}
+.logsub{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-left:8px}
+.hdr-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.max-chip{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.04em;padding:3px 8px;border-radius:3px;background:rgba(74,172,110,.13);color:var(--green);white-space:nowrap}
+.setup-btn{background:var(--card);border:1.5px solid var(--border);color:var(--text);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:6px 14px;cursor:pointer;border-radius:3px;transition:all .15s;white-space:nowrap}
+.setup-btn:hover{border-color:var(--acc);color:var(--acc)}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:200;align-items:center;justify-content:center;padding:16px}
+.overlay.open{display:flex}
+.mbox{background:var(--dark);border:1.5px solid var(--border);border-radius:6px;width:100%;max-width:480px;overflow:hidden}
+.mhead{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;border-bottom:1px solid var(--border)}
+.mtitle{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;color:var(--acc)}
+.mclose{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;line-height:1;padding:2px 4px}
+.mclose:hover{color:var(--text)}
+.mbody{padding:18px 20px}
+.mnote{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.5}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mfield{display:flex;flex-direction:column;gap:3px}
+.mlabel{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text)}
+.msub{font-size:11px;color:#555;line-height:1.3}
+.mwrap{display:flex;align-items:center;background:#111;border:1.5px solid var(--border);border-radius:3px;overflow:hidden;margin-top:2px}
+.mwrap:focus-within{border-color:var(--acc)}
+.minput{background:none;border:none;color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;font-weight:500;padding:7px 10px;width:100%;outline:none}
+.munit{color:var(--muted);font-size:12px;padding:0 10px 0 0;flex-shrink:0}
+.mfoot{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.clearbtn{background:none;border:1px solid #333;color:var(--muted);font-size:12px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;cursor:pointer;border-radius:3px}
+.clearbtn:hover{border-color:var(--red);color:var(--red)}
+.savebtn{background:var(--acc);color:#111;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:14px;letter-spacing:.08em;text-transform:uppercase;border:none;padding:8px 22px;cursor:pointer;border-radius:3px}
+.savebtn:hover{background:#f0d550}
+.main{max-width:980px;margin:0 auto;padding:18px 12px 60px}
+.prompt-bar{background:rgba(232,200,74,.07);border:1px solid rgba(232,200,74,.2);border-radius:4px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:var(--acc);cursor:pointer}
+.prompt-bar:hover{background:rgba(232,200,74,.12)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;padding:8px 0;border-bottom:1px solid var(--border)}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.week-nav{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+.wbtn{background:var(--card);border:1.5px solid var(--border);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:.06em;padding:5px 12px;cursor:pointer;border-radius:3px;transition:all .15s;text-transform:uppercase}
+.wbtn:hover{border-color:var(--acc);color:var(--acc)}
+.wbtn.on{background:var(--acc);border-color:var(--acc);color:#111}
+.wsummary{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.wlabel{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;color:var(--text)}
+.phase-badge{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px}
+.ph-0{background:rgba(232,200,74,.15);color:var(--acc)}
+.ph-1{background:rgba(90,143,208,.15);color:var(--blue)}
+.ph-2{background:rgba(196,74,42,.15);color:var(--red)}
+.ph-3{background:rgba(74,172,110,.15);color:var(--green)}
+.wtheme{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:12px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.day-tabs{display:flex;border-bottom:2px solid var(--border);overflow-x:auto}
+.dtab{background:none;border:none;border-bottom:3px solid transparent;margin-bottom:-2px;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.08em;padding:9px 16px;cursor:pointer;white-space:nowrap;text-transform:uppercase;transition:all .15s}
+.dtab:hover{color:var(--text)}
+.dtab.on{color:var(--acc);border-bottom-color:var(--acc)}
+.dpanel{background:var(--card);border:1.5px solid var(--border);border-top:none;border-radius:0 0 4px 4px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:460px}
+thead{background:#111}
+th{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:9px 12px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody tr{border-bottom:1px solid #222}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:rgba(232,200,74,.03)}
+td{padding:10px 12px;vertical-align:top}
+.exname{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:var(--text)}
+.exmod{font-size:11px;color:var(--muted);font-style:italic;margin-top:2px}
+.nbdg{display:inline-block;background:rgba(90,143,208,.2);color:var(--blue);font-size:10px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;padding:1px 5px;border-radius:2px;text-transform:uppercase;margin-left:5px;vertical-align:middle}
+.srbdg{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;color:var(--acc);white-space:nowrap}
+.ckg{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;color:var(--green);line-height:1}
+.cpct{font-size:11px;color:#555;margin-top:2px}
+.nomax{font-size:12px;color:#555}
+.addmax{background:none;border:none;color:var(--acc);font-size:11px;cursor:pointer;padding:0;text-decoration:underline;display:block;margin-top:3px;font-family:'Barlow',sans-serif}
+.rpebdg{display:inline-block;background:rgba(90,143,208,.15);color:var(--blue);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:.06em;padding:2px 6px;border-radius:2px;text-transform:uppercase;margin-bottom:5px}
+.bagkg{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;color:var(--orange);line-height:1;margin-bottom:5px}
+.testkg{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;color:var(--green);margin-bottom:5px}
+.loginput{background:#111;border:1px solid var(--border);color:var(--text);font-family:'Barlow',sans-serif;font-size:13px;padding:5px 8px;width:82px;border-radius:2px;outline:none;display:block}
+.loginput:focus{border-color:var(--acc)}
+.loginput::placeholder{color:#3a3a3a}
+.loginput-txt{width:100px}
+.prevlog{font-size:11px;color:#555;margin-top:4px}
+.bwtag{font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--muted)}
+.restcell{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--muted);white-space:nowrap}
+.notecell{font-size:12px;color:#999;line-height:1.5;max-width:260px}
+@media(max-width:600px){.notecell{display:none}.logsub{display:none}}
 </style>
 </head>
 <body>
-
 <header>
-  <div class="header-inner">
-    <span class="logo">MST Systems</span>
-    <span class="subtitle">Enter Strongman — 8 Week Programme</span>
+  <div class="hdr">
+    <div>
+      <span class="logo">12-Week Strength</span>
+      <span class="logsub">Squat &middot; Bench &middot; Deadlift &middot; OHP</span>
+    </div>
+    <div class="hdr-right">
+      <div id="maxesBar"></div>
+      <button class="setup-btn" onclick="openModal()">&#9881; 1RM Setup</button>
+    </div>
   </div>
 </header>
 
+<div id="overlay" class="overlay">
+  <div class="mbox">
+    <div class="mhead">
+      <span class="mtitle">Your 1 Rep Maxes</span>
+      <button class="mclose" onclick="closeModal()">&#10005;</button>
+    </div>
+    <div class="mbody">
+      <p class="mnote">Training weights are auto-calculated from these and rounded to the nearest 2.5kg. Update any time to recalculate.</p>
+      <div class="mgrid" id="mgrid"></div>
+    </div>
+    <div class="mfoot">
+      <button class="clearbtn" onclick="clearLogs()">Clear all logs</button>
+      <button class="savebtn" onclick="saveAndClose()">Save</button>
+    </div>
+  </div>
+</div>
+
 <div class="main">
-
-  <div class="key-bar">
-    <div class="key-item"><div class="key-dot" style="background:var(--accent)"></div> Sets × Reps</div>
-    <div class="key-item"><div class="key-dot" style="background:var(--green)"></div> Weight</div>
-    <div class="key-item"><div class="key-dot" style="background:var(--accent2)"></div> New cue this week</div>
-    <div class="key-item" style="margin-left:auto">Day 1: Pull &nbsp;|&nbsp; Day 2: Press &nbsp;|&nbsp; Day 3: Squat/DL &nbsp;|&nbsp; Day 4: Events</div>
+  <div id="promptBar"></div>
+  <div class="legend">
+    <span class="leg-item"><span class="leg-dot" style="background:var(--green)"></span>Calculated from max</span>
+    <span class="leg-item"><span class="leg-dot" style="background:var(--acc)"></span>Sets x Reps</span>
+    <span class="leg-item"><span class="leg-dot" style="background:var(--blue)"></span>Log what you used</span>
+    <span class="leg-item"><span class="leg-dot" style="background:var(--orange)"></span>Sandbag</span>
+    <span class="leg-item"><span class="leg-dot" style="background:var(--green)"></span>Test week</span>
   </div>
-
   <div class="week-nav" id="weekNav"></div>
-
-  <div class="week-summary">
-    <div class="week-label" id="weekLabel">Week 1</div>
-    <div class="week-theme" id="weekTheme"></div>
+  <div class="wsummary">
+    <span class="wlabel" id="wLabel"></span>
+    <span id="phaseBadge" class="phase-badge"></span>
+    <span class="wtheme" id="wTheme"></span>
   </div>
-
   <div class="day-tabs" id="dayTabs"></div>
-  <div class="day-panel" id="dayPanel"></div>
-
+  <div class="dpanel" id="dayPanel"></div>
 </div>
 
 <script>
-const weekThemes = [
-  "Intro: Positions & Technique",
-  "Consolidation: Refine Positions",
-  "Chin Tuck & Hip Drive",
-  "Drill the Cues",
-  "Upper Back & Vertical Torso",
-  "Load Up & Refine",
-  "Bring It All Together",
-  "Final Week: Maximum Effort"
+var MAXCFG=[
+  {k:'sq',    label:'Squat',       sub:'Back squat 1RM'},
+  {k:'bench', label:'Bench Press', sub:'Flat bench 1RM'},
+  {k:'dl',    label:'Deadlift',    sub:'Conventional DL 1RM'},
+  {k:'ohp',   label:'OHP',         sub:'Strict overhead press 1RM'},
 ];
+var MAXFULL={sq:'Squat',dl:'Deadlift',bench:'Bench',ohp:'OHP'};
+var MAXSHORT={sq:'SQ',bench:'Bench',dl:'DL',ohp:'OHP'};
+var THEMES=[
+  'Foundation — establish your positions',
+  'Foundation — drill the basics',
+  'Foundation — add load, maintain standards',
+  'Foundation — strong finish before the step up',
+  'Build — heavier loads, same standards',
+  'Build — consistency over everything',
+  'Build — pushing the range',
+  'Build — peak of the build phase',
+  'Peak — low volume, high intensity',
+  'Peak — finding your limits',
+  'Peak — final heavy week',
+  'Test week — find your true maxes',
+];
+var DLABELS=['Day 1 — Squat','Day 2 — Bench','Day 3 — Deadlift','Day 4 — OHP + Sandbag'];
+var PHASE_LABELS=['Foundation','Build','Peak','Test'];
 
-// Data: [exercise, modifier, sets_reps, weight, rest, notes, isNew]
-const program = {
-  1: {
-    1: [
-      ["Hamstring Curl", "", "3×15", "RPE 7", "60s", "Activate hamstrings. Good contractions, controlled eccentrics.", false],
-      ["Deadlift", "3s iso hold at knee (eccentric)", "5×5", "50% 1RM", "90s", "Double overhand, straps. Narrow stance, high hips. Hinge — not squat.", false],
-      ["Bent Over Row", "2s iso hold below knee", "3×10", "RPE 7", "2–3 min", "Same stance as deadlift. Row to hip crease.", false],
-      ["Lat Pulldown", "", "3×15", "RPE 7", "60s", "Upright. Bar to mid-neck. Squeeze at bottom, control to top.", false],
-      ["GHD Back Extension", "", "3×10", "Bodyweight", "2 min", "Lower back + hamstrings. Chest parallel to wall at top.", false],
-      ["Weighted Sit Up", "", "3×10", "Suitable plate", "60s", "Plate held directly overhead throughout.", false],
-    ],
-    2: [
-      ["Dowel Lat Stretch", "5s hold each rep", "3×6", "Light bar", "60s", "Elbows on bench, knees on floor. Sink hips to heels, drop chest. One stretch = one rep.", false],
-      ["Front Squat", "Speed — onto toes at top", "6×2", "50% 1RM", "45s", "Full rack or use straps. One fluid motion — squat into full toe extension. Like a jump.", false],
-      ["Push Press", "", "8×3", "60% 1RM", "60s", "Tight rack. Slow controlled dip. Explode onto toes. Power from legs.", false],
-      ["Strict Press", "3s eccentric every rep", "5×5", "50% 1RM", "3 min", "Bar at Adam's apple. Press overhead, 3s controlled descent.", false],
-      ["Unilateral Arnold Press", "One arm at a time", "3×10L/10R", "RPE 7", "60s", "Core braced. Upright. Slow tempo.", false],
-      ["Lateral Raise", "", "3×15", "RPE 7", "60s", "Controlled throughout. Should be able to stop at any point.", false],
-      ["Face Pull", "", "3×30", "RPE 7", "60s", "Cable at head height, rope. Row to eye level. Elbows high, in line with ears.", false],
-    ],
-    3: [
-      ["Good Mornings", "", "3×10", "RPE 6", "60s", "Warmup. Slight knee bend OK. Slow eccentric to hamstring stretch, explode up.", false],
-      ["Paused Back Squat", "3s pause in hole", "6×6", "50% 1RM", "As needed", "Hip crease below knee. Full body tightness — legs, glutes, core, upper back all braced during pause.", false],
-      ["Deadlift", "Speed reps", "6×2", "50% 1RM", "45s", "As fast as possible on concentric. Controlled eccentric, hold at floor, fire up.", false],
-      ["Rear Foot Elevated Split Squat", "", "10L / 10R", "Empty bar", "60s", "Rear foot on bench. Knee to floor and up. Core engaged, slow tempo.", false],
-      ["Goblet Squat", "1s pause in hole", "4×8", "RPE 8", "60s", "Time under tension. Don't fully lock out — constant tension.", false],
-      ["Copenhagen Plank", "", "2×15s L / 15s R", "Bodyweight", "60s", "Side plank, one foot elevated on bench, other foot off floor. Adductor stability.", false],
-    ],
-    4: [
-      ["Log Press", "", "10×3", "RPE 6", "60s", "New movement — keep it light. Log tilted away → deadlift up → hip thrust clean onto delts → push press.", false],
-      ["Farmers Walk", "10m drop and turns", "4×40m", "RPE 7", "As needed", "Hands centred. Brace on turn. Pick up fast and go. Speed event.", false],
-      ["Super Yoke", "", "5×20m", "RPE 7", "As needed", "Crossbar ~6\" below chin. Upright. Quarter squat up, feel stable, then move fast.", false],
-      ["Atlas Stones", "3 pickups, 1 lap, 1 extension", "5 rounds", "RPE 7", "As needed", "Feet in middle of stone. Squeeze arms in tight. Lap close to hips. Full hip thrust to extension — onto toes.", false],
-    ],
-  },
-  2: {
-    1: [
-      ["Hamstring Curl", "", "3×15", "Same as W1", "60s", "Same cues.", false],
-      ["Deadlift", "3s iso hold at knee (eccentric)", "5×5", "55% 1RM", "90s", "5% increase. During iso hold: shoulders in front of bar, hips high — don't let hips drop.", true],
-      ["Bent Over Row", "2s iso hold below knee", "3×10", "Same as W1", "2–3 min", "Hips high, shoulders in front during hold.", false],
-      ["Lat Pulldown", "", "3×15", "Same as W1", "60s", "Hold at top every rep.", false],
-      ["GHD Back Extension", "5s hold at every 5th rep", "3×10", "Bodyweight", "2 min", "Allow hamstring flexion to stabilise at top.", false],
-      ["Weighted Sit Up", "", "3×10", "Same as W1", "60s", "", false],
-    ],
-    2: [
-      ["Dowel Lat Stretch", "5s hold", "3×6", "Light bar", "60s", "Get a little deeper each rep.", false],
-      ["Front Squat", "Speed — onto toes", "8×2", "50% 1RM", "45s", "+2 sets. Fully extend onto toes using squat power — not a calf raise.", false],
-      ["Push Press", "", "10×3", "60% 1RM", "60s", "+2 sets. Tight rack, power from legs.", false],
-      ["Strict Press", "3s eccentric", "5×5", "52.5% 1RM", "3 min", "Same cues.", false],
-      ["Unilateral Arnold Press", "", "3×10L/10R", "Same as W1", "60s", "", false],
-      ["Lateral Raise", "", "3×15", "Same as W1", "60s", "Slow tempo.", false],
-      ["Face Pull", "", "3×30", "RPE 7", "60s", "Elbows in line with ears.", false],
-    ],
-    3: [
-      ["Good Mornings", "", "3×10", "RPE 6", "60s", "Activation — keep load light.", false],
-      ["Paused Back Squat", "3s pause", "6×6", "50% 1RM", "As needed", "Hip crease below knee. Full body tightness. Don't relax legs or core during pause.", false],
-      ["Deadlift", "Speed — slow eccentric", "6×2", "50% 1RM", "45s", "3–5s controlled eccentric. Hold position at floor. Then fire up fast.", true],
-      ["RFESS", "", "10L / 10R", "Barbell", "60s", "Same as W1. Core engaged.", false],
-      ["Goblet Squat", "1s pause", "4×8", "Same as W1", "60s", "Constant tension.", false],
-      ["Copenhagen Plank", "", "2×15s L / 15s R", "Bodyweight", "45s", "Slightly less rest.", false],
-    ],
-    4: [
-      ["Log Press", "", "12×3", "RPE 6", "60s", "Same cues as W1. Focus on the clean — hip thrust, onto toes.", false],
-      ["Farmers Walk", "10m drop and turns", "5×40m", "Same as W1", "As needed", "+1 set. Drop turn pickup: no time to reposition, just turn and go.", false],
-      ["Super Yoke", "", "4×20m", "Max +10% from W1", "As needed", "Apply W1 cues with slight load increase.", false],
-      ["Atlas Stones", "3 pickups, 1 lap, 1 extension", "6–8 rounds", "Same as W1", "As needed", "+1–3 rounds. Focus on pickup and lap — extension can come next week.", false],
-    ],
-  },
-  3: {
-    1: [
-      ["Hamstring Curl", "", "3×15", "Same as W2", "–", "Slow the tempo down week by week.", false],
-      ["Deadlift", "3s iso hold at knee", "6×4", "60% 1RM", "2 min", "NEW CUE: chin tucked — imagine holding a tennis ball under chin. Neutral spine = strongest.", true],
-      ["Bent Over Row", "2s iso hold", "5×10", "Same as W2", "2–3 min", "Chin tucked throughout. Don't look up, out, or at the bar.", true],
-      ["Lat Pulldown", "", "3×12", "Increase", "90s", "Reps drop, load increases. Same form.", false],
-      ["GHD Back Extension", "5s hold every 5th rep", "3×10", "Bodyweight", "2 min", "More control, reduce rest if possible.", false],
-      ["Weighted Sit Up", "", "3×12", "Same as W2", "60s", "+2 reps.", false],
-    ],
-    2: [
-      ["Dowel Lat Stretch", "5s hold", "3×6", "Light bar", "60s", "Deeper stretches each session.", false],
-      ["Front Squat", "Speed — onto toes", "10×2", "50% 1RM", "45s", "NEW: slow eccentric. Knees track over toes. Twist ground outward beneath feet.", true],
-      ["Push Press", "", "12×3", "60% 1RM", "60s", "NEW: slow controlled dip. Let knees come out. Don't rush down — you'll lose rack position.", true],
-      ["Strict Press", "3s eccentric", "5×5", "55% 1RM", "3 min", "", false],
-      ["Unilateral Arnold Press", "", "3×10L/10R", "Slight increase", "60s", "Don't let body twist with added load.", false],
-      ["Lateral Raise", "", "3×12", "Increase", "60s", "Controlled tempo with higher load.", false],
-      ["Face Pull", "", "3×20", "Increase", "60s", "Increased load, fewer reps.", false],
-    ],
-    3: [
-      ["Good Mornings", "", "3×10", "RPE 6", "60s", "Activation. Light load.", false],
-      ["Paused Back Squat", "2s pause (reduced)", "6×6", "60% 1RM", "As needed", "Load up. Add: twist ground beneath feet, knees track over toes.", true],
-      ["Deadlift", "Speed", "8×2", "55% 1RM", "45s", "Add chin tuck cue. Imaginary tennis ball.", true],
-      ["RFESS", "", "10L / 10R", "25kg", "60s", "Start adding load weekly. Slow, core braced.", false],
-      ["Goblet Squat", "1s pause", "4×8", "Same as W2", "60s", "Constant tension.", false],
-      ["Copenhagen Plank", "", "2×15s L / 15s R", "Bodyweight", "45s", "Aim to feel more stable.", false],
-    ],
-    4: [
-      ["Log Press", "10 min EMOM: 3 cleans + 1 press", "10 sets", "~+10% from W2", "EMOM", "Focus on clean: log tilted away → squat down → fire with hips (not arms/upper back) → onto toes.", false],
-      ["Farmers Walk", "20m drop turns", "3×40m", "Slight increase", "As needed", "NEW: short fast steps. Knees forward not out. Floor is lava — keep feet moving.", true],
-      ["Super Yoke", "", "3×20m", "Max +10%", "As needed", "Same movement focus as farmers — short steps, knees forward, fast feet.", true],
-      ["Atlas Stones", "1 pickup, 3 extensions", "5 rounds", "RPE 7–8", "As needed", "Focus shifts to extension. Stone tight to hips, hips back loading hamstrings, fire through — hold high.", true],
-    ],
-  },
-  4: {
-    1: [
-      ["Hamstring Curl", "", "3×15", "Same as W3", "–", "Same cues.", false],
-      ["Deadlift", "3s iso hold at knee", "6×4", "65% 1RM", "2 min", "Drill chin tuck. Make it feel natural.", false],
-      ["Bent Over Row", "2s iso hold", "5×10", "+5–10% from W3", "2–3 min", "Chin tucked. If struggling, 5% increase. If easy, 10% + slow the tempo.", false],
-      ["Lat Pulldown", "", "3×12", "Increase", "90s", "Slower tempo. Hold arms outstretched at top every rep.", false],
-      ["GHD Back Extension", "5s hold every 5th rep", "3×15", "Bodyweight", "2 min", "+5 reps. Hold the pause for a strong 5s.", false],
-      ["Weighted Sit Up", "", "3×10", "Same as W3", "60s", "", false],
-    ],
-    2: [
-      ["Dowel Lat Stretch", "5s hold", "3×6", "Light bar", "60s", "Deeper each time.", false],
-      ["Front Squat", "Speed — onto toes", "8×3", "50% 1RM", "60s", "+1 rep per set. Priming for push press. Same cues.", false],
-      ["Push Press", "", "12×3", "62.5% 1RM", "60s", "Think of a spring — slow tension build on dip, explosive push. Generate max power.", false],
-      ["Strict Press", "3s eccentric", "6×4", "60% 1RM", "3 min", "More sets and load. Slow eccentrics building base strength.", false],
-      ["Unilateral Arnold Press", "", "3×10L/10R", "Same as W3", "60s", "", false],
-      ["Lateral Raise", "", "3×15", "Same as W3", "60s", "Slow tempo.", false],
-      ["Face Pull", "", "3×20", "RPE 7", "60s", "", false],
-    ],
-    3: [
-      ["Good Mornings", "", "3×10", "RPE 6", "60s", "Activation only.", false],
-      ["Paused Back Squat", "2s pause", "6×6", "65% 1RM", "As needed", "Hip crease below knee. Twist ground, knees over toes.", false],
-      ["Deadlift", "Speed", "8×2", "60% 1RM", "45s", "Chin tucked throughout.", false],
-      ["RFESS", "", "10L / 10R", "+5kg from W3", "60s", "Slow reps, stable core.", false],
-      ["Goblet Squat", "1s pause", "4×8", "Same as W3", "60s", "Constant tension.", false],
-      ["Copenhagen Plank", "", "2×15s L / 15s R", "Bodyweight", "45s", "", false],
-    ],
-    4: [
-      ["Log Press", "12 min EMOM: 3 cleans + 1 press", "12 sets", "Same as W3", "EMOM", "46 total cleans — drill every single one. Explosive push press finish.", false],
-      ["Farmers Walk", "20m drop turns", "3×40m", "Slight increase", "As needed", "Speed focus. Same movement cues as W3.", false],
-      ["Super Yoke", "", "5×20m", "-10% from W3", "As needed", "Load drops, sets increase. Time every set — keep notes.", false],
-      ["Atlas Stones", "1 pickup, 3 extensions", "6–8 rounds", "Same as W3", "As needed", "+rounds. Focus on extension fluidity.", false],
-    ],
-  },
-  5: {
-    1: [
-      ["Hamstring Curl", "", "3×12", "Increase", "60s", "Reps drop, load up.", false],
-      ["Deadlift", "3s iso hold at knee", "7×3", "70% 1RM", "3 min", "NEW CUE: lock upper back. Squeeze shoulder blades together — especially during iso hold.", true],
-      ["Bent Over Row", "2s iso hold", "4×10", "Same as W4", "2–3 min", "Lock upper back. Hold at top — feel lats contract.", true],
-      ["Lat Pulldown", "", "3×10", "Increase", "2 min", "Getting heavy. Maintain form.", false],
-      ["GHD Back Extension", "5s hold every 5th rep", "3×15", "Bodyweight", "2 min", "Reduce rest, more confidence on pauses.", false],
-      ["Weighted Sit Up", "", "3×10", "Increase", "90s", "Sensible load increase.", false],
-    ],
-    2: [
-      ["Dowel Lat Stretch", "", "3×6", "Light bar", "60s", "Deeper stretches.", false],
-      ["Front Squat", "Speed — onto toes", "10×3", "50% 1RM", "60s", "NEW CUE: keep torso perfectly vertical. Film every set.", true],
-      ["Push Press", "", "8×2", "70% 1RM", "45s", "NEW CUE: vertical torso. Leaning back loses hip power. Power from hips — stay upright to use it.", true],
-      ["Strict Press", "3s eccentric", "6×4", "62.5% 1RM", "3 min", "Strict on eccentric timing.", false],
-      ["Unilateral Arnold Press", "", "3×8L/8R", "Increase", "60s", "More load, but no body movement.", false],
-      ["Lateral Raise", "", "3×10", "Increase", "60s", "Slow and controlled.", false],
-      ["Face Pull", "", "3×15", "Increase", "60s", "Feel rear delts and traps.", false],
-    ],
-    3: [
-      ["Good Mornings", "", "3×10", "RPE 6", "60s", "Activation.", false],
-      ["Paused Back Squat", "1s pause (reduced)", "4×6", "70% 1RM", "As needed", "NEW: brace upper back. Bend bar down as if doing a lat pulldown.", true],
-      ["Deadlift", "Speed", "6×3", "60% 1RM", "45s", "Upper back and lats locked in.", false],
-      ["RFESS", "", "8L / 8R", "Max +5kg", "60s", "", false],
-      ["Goblet Squat", "1s pause", "4×10", "Same as W4", "60s", "+2 reps.", false],
-      ["Copenhagen Plank", "", "3×15s L / 15s R", "Bodyweight", "45s", "+1 set.", false],
-    ],
-    4: [
-      ["Log Press", "8 min EMOM: 1 clean + 3 press", "8 sets", "RPE 7", "EMOM", "Focus shifts to press. Flared lats, elbows out, log on front delts. Vertical torso. Dip with knees out.", true],
-      ["Farmers Walk", "Sprint 20m → 40m farmers + 10s hold", "1 round", "+10–20%", "–", "Full effort sprint → fast pickup → short steps → hold chest up at end.", false],
-      ["Super Yoke", "", "4×20m", "+10%", "As needed", "Competition start — countdown yourself. Time every set.", false],
-      ["Atlas Stones", "12 reps to platform", "1 attempt", "RPE 8", "–", "Sternum-height platform. Set up close. Aim above platform edge. Vertical then horizontal.", false],
-    ],
-  },
-  6: {
-    1: [
-      ["Hamstring Curl", "", "3×12", "Same as W5", "60s", "Progress through execution quality.", false],
-      ["Deadlift", "3s iso hold at knee", "7×3", "75% 1RM", "3 min", "Record sets. Check for upper back rounding.", false],
-      ["Bent Over Row", "2s iso hold", "5×10", "Same as W5", "2–3 min", "Upper back tight. Squeeze at top of every rep.", false],
-      ["Lat Pulldown", "", "3×10", "Same as W5", "2 min", "", false],
-      ["GHD Back Extension", "5s hold every 5th rep", "3×15", "Bodyweight", "2 min", "Improving each week.", false],
-      ["Weighted Sit Up", "", "3×10", "Same as W5", "90s", "", false],
-    ],
-    2: [
-      ["Dowel Lat Stretch", "", "3×6", "Light bar", "60s", "Deeper each time.", false],
-      ["Front Squat", "Speed — onto toes", "10×3", "50% 1RM", "60s", "Drill vertical torso.", false],
-      ["Push Press", "", "10×2", "70% 1RM", "45s", "Vertical torso. Film side-on if possible.", false],
-      ["Strict Press", "3s eccentric", "6×4", "65% 1RM", "3 min", "", false],
-      ["Unilateral Arnold Press", "", "3×8L/8R", "Same as W5", "60s", "", false],
-      ["Lateral Raise", "", "3×10", "Same as W5", "60s", "", false],
-      ["Face Pull", "", "3×15", "Same as W5", "60s", "", false],
-    ],
-    3: [
-      ["Good Mornings", "", "3×10", "RPE 6", "60s", "", false],
-      ["Paused Back Squat", "1s pause", "4×6", "75% 1RM", "As needed", "Final 2 weeks of paused squats. Upper back tight, twist feet, hip crease at/below knee.", false],
-      ["Deadlift", "Speed", "8×3", "60% 1RM", "45s", "Upper back and lats engaged.", false],
-      ["RFESS", "", "8L / 8R", "Max +5kg", "60s", "", false],
-      ["Goblet Squat", "1s pause", "4×10", "Same as W5", "60s", "", false],
-      ["Copenhagen Plank", "", "3×15s L / 15s R", "Bodyweight", "45s", "", false],
-    ],
-    4: [
-      ["Log Press", "10 min EMOM: 1 clean + 3 press", "10 sets", "Same as W5", "EMOM", "Focus on rack position and dip quality. Log is a long-term skill — note your mistakes and improve each session.", false],
-      ["Farmers Walk", "Sprint 20m → 40m farmers + 10s hold", "1 round", "+10–20% from W5", "–", "More efficient pickup. Same cues.", false],
-      ["Super Yoke", "", "3×20m", "+10%", "As needed", "Beat last week's times.", false],
-      ["Atlas Stones", "15 reps to platform", "1 attempt", "RPE 8", "–", "+3 reps. Same setup cues.", false],
-    ],
-  },
-  7: {
-    1: [
-      ["Hamstring Curl", "", "3×10", "Increase", "60s", "Reps drop again, load up.", false],
-      ["Deadlift", "3s iso hold at knee", "8×2", "80% 1RM", "3 min", "Bring all cues together: high hips, chin tucked, upper back locked and tight.", false],
-      ["Bent Over Row", "2s iso hold", "3×8", "+5–10%", "2–3 min", "Same deadlift cues.", false],
-      ["Lat Pulldown", "", "3×8", "RPE 9", "2 min", "Heavy now. Slight cheat is OK. Squeeze at bottom.", false],
-      ["GHD Back Extension", "5s hold every 5th rep", "3×15", "Bodyweight", "2 min", "", false],
-      ["Weighted Sit Up", "", "3×12", "Same as W6", "90s", "", false],
-    ],
-    2: [
-      ["Dowel Lat Stretch", "", "3×6", "Light bar", "60s", "", false],
-      ["Front Squat", "Speed — onto toes", "6×3", "60% 1RM", "90s", "Load increases. Bring all cues together — film and review.", false],
-      ["Push Press", "", "8×2", "80% 1RM", "2–3 min", "Heavy. Straight bar path. Feel leg drive translate to bar speed.", false],
-      ["Strict Press", "No timed eccentric", "5×5", "70% 1RM", "3 min", "Just rep out. Tight upper back, braced core.", false],
-      ["Unilateral Arnold Press", "", "3×10L/10R", "Same as W6", "2 min", "", false],
-      ["Lateral Raise", "", "3×10", "Same as W6", "60s", "", false],
-      ["Face Pull", "", "3×12", "Increase", "60s", "", false],
-    ],
-    3: [
-      ["Good Mornings", "", "3×10", "RPE 6", "60s", "", false],
-      ["Back Squat", "No pause", "4×6", "80% 1RM", "As needed", "Pauses removed. All cues: depth, twist feet, bend bar.", false],
-      ["Deadlift", "Speed", "6×2", "70% 1RM", "3 min", "Bring all cues together.", false],
-      ["RFESS", "", "8L / 8R", "Max +5kg", "60s", "", false],
-      ["Goblet Squat", "1s pause", "4×10", "Same as W6", "60s", "", false],
-      ["Copenhagen Plank", "", "3×15s L / 15s R", "Bodyweight", "45s", "", false],
-    ],
-    4: [
-      ["Log Press", "1 clean + 1 press every 30s for 5 min", "10 sets", "RPE 8", "30s", "Single reps. All cues. NEW: look at ceiling until rep is locked out.", true],
-      ["Farmers Walk", "", "3×20m", "+5% from W6", "–", "Short runs. Fast, short steps. Full control.", false],
-      ["Super Yoke", "20m drop turns", "3×40m", "RPE 8 / same as W1", "As needed", "Drop and turns added. Time every set. Competition standard.", false],
-      ["Atlas Stones", "3-stone run", "3 rounds", "Progressive by stone", "–", "Stone 1: easy. Stone 2: RPE 7. Stone 3: challenging but achievable. Time runs.", false],
-    ],
-  },
-  8: {
-    1: [
-      ["Hamstring Curl", "", "3×10", "Increase", "60s", "", false],
-      ["Deadlift", "3s iso hold at knee", "8×3", "85% 1RM", "As needed", "Final week. Checklist: high hips / chin tucked / upper back locked. Film and review.", false],
-      ["Bent Over Row", "No iso noted", "3×8", "Same / optional +", "2–3 min", "Same deadlift cues.", false],
-      ["Lat Pulldown", "", "3×8", "Same as W7", "2 min", "", false],
-      ["GHD Back Extension", "5s hold every 5th rep", "3×15", "Bodyweight", "2 min", "", false],
-      ["Weighted Sit Up", "", "3×12", "Increase", "90s", "", false],
-    ],
-    2: [
-      ["Dowel Lat Stretch", "", "3×6", "Light bar", "60s", "Final session. Compare to week 1.", false],
-      ["Front Squat", "Speed — onto toes", "8×3", "60% 1RM", "90s", "Final session. All cues together.", false],
-      ["Push Press", "", "5×3", "85–90% 1RM", "2–3 min", "Heavy. Perfect form > more weight. 85% with perfect execution beats 90% with breakdown.", false],
-      ["Strict Press", "", "5×5", "75% 1RM", "3 min", "", false],
-      ["Unilateral Arnold Press", "", "3×8L/8R", "Increase", "2 min", "", false],
-      ["Lateral Raise", "", "4×10", "Increase", "60s", "+1 set.", false],
-      ["Face Pull", "", "3×15", "Increase", "60s", "", false],
-    ],
-    3: [
-      ["Good Mornings", "", "3×10", "RPE 6", "60s", "", false],
-      ["Back Squat", "", "4×6", "85% 1RM", "As needed", "Heavier. Maintain all 7 weeks of standards.", false],
-      ["Deadlift", "Speed — final week", "5×3", "70% 1RM", "3 min", "Explosive off floor. All cues. Final speed session.", false],
-      ["RFESS", "", "8L / 8R", "Max +5kg", "60s", "", false],
-      ["Goblet Squat", "1s pause", "4×10", "Same as W7", "60s", "", false],
-      ["Copenhagen Plank", "", "3×15s L / 15s R", "Bodyweight", "45s", "", false],
-    ],
-    4: [
-      ["Log Press", "1 clean + 1 press every 30s for 6 min", "12 sets", "Same as W7 (small adds after set 8)", "30s", "+2 rounds. After set 8 you can add weight — max 2.5kg increments. No failed reps.", false],
-      ["Farmers Walk", "", "3×20m", "Start same as W7, increase each set", "–", "Aim for ~10s per run. No run >13s. Keep it fast.", false],
-      ["Super Yoke", "15m drop turns", "3×30m", "Increase from W7", "As needed", "Competition intensity. Time every set, beat it each round.", false],
-      ["Atlas Stones", "3-stone run", "3 rounds", "Increase at least one stone", "–", "Beat last week's times. All cues from the programme together.", false],
-    ],
-  }
-};
+var CW=1,CD=1;
 
-const dayLabels = ["Day 1 — Pull", "Day 2 — Press", "Day 3 — Squat / DL", "Day 4 — Events"];
+function gmx(){try{return JSON.parse(localStorage.getItem('s12_mx')||'{}')}catch{return{}}}
+function smx(m){localStorage.setItem('s12_mx',JSON.stringify(m))}
+function glog(k){return localStorage.getItem('s12_lg_'+k)||''}
+function slog(k,v){v?localStorage.setItem('s12_lg_'+k,String(v)):localStorage.removeItem('s12_lg_'+k)}
 
-let currentWeek = 1;
-let currentDay = 1;
-
-// In-memory log cache: key -> {weight, note}
-const logCache = {};
-
-function storageKey(w, d, i) {
-  return `mst:w${w}d${d}e${i}`;
+function openModal(){
+  var mx=gmx();
+  document.getElementById('mgrid').innerHTML=MAXCFG.map(function(c){
+    return '<div class="mfield"><div class="mlabel">'+c.label+'</div>'+(c.sub?'<div class="msub">'+c.sub+'</div>':'')+'<div class="mwrap"><input class="minput" type="number" step="2.5" min="0" id="mi_'+c.k+'" value="'+(mx[c.k]||'')+'" placeholder="0"><span class="munit">kg</span></div></div>';
+  }).join('');
+  document.getElementById('overlay').classList.add('open');
 }
+function closeModal(){document.getElementById('overlay').classList.remove('open')}
+function saveAndClose(){
+  var m={};
+  MAXCFG.forEach(function(c){m[c.k]=parseFloat(document.getElementById('mi_'+c.k).value)||0});
+  smx(m);closeModal();render();
+}
+function clearLogs(){
+  if(!confirm('Delete all logged weights? Cannot be undone.'))return;
+  Object.keys(localStorage).filter(function(k){return k.startsWith('s12_lg_')}).forEach(function(k){localStorage.removeItem(k)});
+  render();
+}
+document.getElementById('overlay').addEventListener('click',function(e){if(e.target===this)closeModal()});
 
-async function loadAllLogs() {
-  try {
-    const keys = await window.storage.list('mst:');
-    if (keys && keys.keys) {
-      for (const k of keys.keys) {
-        try {
-          const res = await window.storage.get(k);
-          if (res) logCache[k] = JSON.parse(res.value);
-        } catch(e) {}
-      }
+function wcell(spec,w,d,i){
+  var mx=gmx();
+  var lk=w+'_'+d+'_'+i;
+  var logged=glog(lk);
+  var prev=w>1?glog((w-1)+'_'+d+'_'+i):'';
+
+  if(spec&&spec.p){
+    var mv=mx[spec.r]||0;
+    var nm=MAXFULL[spec.r]||spec.r;
+    if(mv>0){
+      var kg=Math.round(mv*spec.p/100/2.5)*2.5;
+      return '<div class="ckg">'+kg+'kg</div><div class="cpct">'+spec.p+'% '+nm+'</div>';
     }
-  } catch(e) {}
-}
-
-async function saveLog(w, d, i, weight, note) {
-  const k = storageKey(w, d, i);
-  const val = { weight, note };
-  logCache[k] = val;
-  try {
-    await window.storage.set(k, JSON.stringify(val));
-  } catch(e) {}
-}
-
-function getLog(w, d, i) {
-  return logCache[storageKey(w, d, i)] || null;
-}
-
-function weekHasLog(w) {
-  return Object.keys(logCache).some(k => k.startsWith(`mst:w${w}d`));
-}
-
-function renderWeekNav() {
-  const nav = document.getElementById('weekNav');
-  nav.innerHTML = '';
-  for (let w = 1; w <= 8; w++) {
-    const btn = document.createElement('button');
-    btn.className = 'week-btn' + (w === currentWeek ? ' active' : '');
-    const dot = weekHasLog(w) ? '<span class="logged-dot"></span>' : '';
-    btn.innerHTML = `W${w}${dot}`;
-    btn.onclick = () => { currentWeek = w; render(); };
-    nav.appendChild(btn);
+    return '<div class="nomax">'+spec.p+'% '+nm+'</div><button class="addmax" onclick="openModal()">Set your max &#8599;</button>';
   }
-}
-
-function renderDayTabs() {
-  const tabs = document.getElementById('dayTabs');
-  tabs.innerHTML = '';
-  for (let d = 1; d <= 4; d++) {
-    const tab = document.createElement('button');
-    tab.className = 'day-tab' + (d === currentDay ? ' active' : '');
-    tab.textContent = dayLabels[d-1];
-    tab.onclick = () => { currentDay = d; render(); };
-    tabs.appendChild(tab);
+  if(spec&&spec.test){
+    var ph=prev?'<div class="prevlog">&#8593; W'+(w-1)+': '+prev+'kg</div>':'';
+    return '<div class="testkg">Build to heavy single</div><input class="loginput" type="number" step="2.5" min="0" value="'+logged+'" placeholder="achieved kg" oninput="slog(\''+lk+'\',this.value)">'+ph;
   }
+  if(spec&&spec.bag){
+    var ph2=prev?'<div class="prevlog">&#8593; W'+(w-1)+': '+prev+'</div>':'';
+    return '<div class="bagkg">'+spec.bag+'kg bag</div><input class="loginput loginput-txt" type="text" value="'+logged+'" placeholder="notes" oninput="slog(\''+lk+'\',this.value)">'+ph2;
+  }
+  if(spec&&spec.e){
+    var ph3=prev?'<div class="prevlog">&#8593; W'+(w-1)+': '+prev+'kg</div>':'';
+    return '<span class="rpebdg">RPE '+spec.e+'</span><input class="loginput" type="number" step="any" min="0" value="'+logged+'" placeholder="kg" oninput="slog(\''+lk+'\',this.value)">'+ph3;
+  }
+  var label=spec==='bw'?'Bodyweight':(spec||'—');
+  return '<span class="bwtag">'+label+'</span>';
 }
 
-function renderTable() {
-  const panel = document.getElementById('dayPanel');
-  const exercises = program[currentWeek][currentDay];
-
-  panel.innerHTML = '';
-
-  const table = document.createElement('table');
-  table.innerHTML = `<thead><tr>
-    <th>Exercise</th>
-    <th>Sets × Reps</th>
-    <th>Target</th>
-    <th>Rest</th>
-    <th>Logged Weight</th>
-    <th class="notes-col">Key Notes</th>
-  </tr></thead>`;
-
-  const tbody = document.createElement('tbody');
-
-  exercises.forEach(([ex, mod, sr, weight, rest, notes, isNew], i) => {
-    const saved = getLog(currentWeek, currentDay, i);
-    const noteHtml = notes
-      ? notes.split('. ').filter(Boolean).map(n => `<li>${n}.</li>`).join('')
-      : '';
-
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>
-        <div class="exercise-name">${ex}${isNew ? '<span class="new-cue">New Cue</span>' : ''}</div>
-        ${mod ? `<div class="exercise-detail">${mod}</div>` : ''}
-      </td>
-      <td><span class="badge">${sr}</span></td>
-      <td><span class="weight-cell">${weight}</span></td>
-      <td><span class="rest-cell">${rest}</span></td>
-      <td class="log-cell">
-        <div class="log-wrap">
-          <input
-            class="log-input ${saved ? 'saved' : ''}"
-            type="text"
-            placeholder="e.g. 80kg"
-            value="${saved ? saved.weight : ''}"
-            id="inp-${i}"
-          />
-          <button class="log-btn ${saved ? 'saved-btn' : ''}" id="btn-${i}">
-            ${saved ? '✓' : 'Log'}
-          </button>
-        </div>
-        <input
-          class="log-input"
-          type="text"
-          placeholder="Notes (optional)"
-          value="${saved && saved.note ? saved.note : ''}"
-          id="note-${i}"
-          style="margin-top:5px; width:100%; font-size:11px; font-weight:400; font-style:italic;"
-        />
-      </td>
-      <td class="notes-cell">${noteHtml ? `<ul>${noteHtml}</ul>` : ''}</td>
-    `;
-    tbody.appendChild(tr);
-
-    // After appending, wire up the button
-    setTimeout(() => {
-      const btn = document.getElementById(`btn-${i}`);
-      const inp = document.getElementById(`inp-${i}`);
-      const noteInp = document.getElementById(`note-${i}`);
-      if (!btn || !inp) return;
-
-      const doSave = async () => {
-        const val = inp.value.trim();
-        if (!val) return;
-        const noteVal = noteInp ? noteInp.value.trim() : '';
-        await saveLog(currentWeek, currentDay, i, val, noteVal);
-        inp.classList.add('saved');
-        btn.textContent = '✓';
-        btn.classList.add('saved-btn');
-        renderWeekNav(); // update dot indicators
-      };
-
-      btn.addEventListener('click', doSave);
-      inp.addEventListener('keydown', e => { if (e.key === 'Enter') doSave(); });
-    }, 0);
-  });
-
-  table.appendChild(tbody);
-  panel.appendChild(table);
+function rtable(w,d){
+  var rows=DATA[w][d].map(function(ex,i){
+    var nm=ex[0],mod=ex[1],sr=ex[2],ws=ex[3],rest=ex[4],notes=ex[5],isNew=ex[6];
+    var noteHtml=notes?notes.split('. ').filter(Boolean).map(function(s){return s+'.'}).join('<br>'):'';
+    return '<tr>'
+      +'<td><div class="exname">'+nm+(isNew?'<span class="nbdg">Phase up</span>':'')+'</div>'+(mod?'<div class="exmod">'+mod+'</div>':'')+'</td>'
+      +'<td><span class="srbdg">'+sr+'</span></td>'
+      +'<td>'+wcell(ws,w,d,i)+'</td>'
+      +'<td class="restcell">'+rest+'</td>'
+      +'<td class="notecell">'+noteHtml+'</td>'
+      +'</tr>';
+  }).join('');
+  return '<table><thead><tr><th>Exercise</th><th>Sets x Reps</th><th>Weight</th><th>Rest</th><th>Notes</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
 
-function render() {
-  renderWeekNav();
-  renderDayTabs();
-  document.getElementById('weekLabel').textContent = `Week ${currentWeek}`;
-  document.getElementById('weekTheme').textContent = weekThemes[currentWeek-1];
-  renderTable();
+function render(){
+  var mx=gmx();
+  var anyMax=Object.values(mx).some(function(v){return v>0});
+  document.getElementById('promptBar').innerHTML=anyMax?'':'<div class="prompt-bar" onclick="openModal()">&#9889; Add your 1RM maxes to auto-calculate training weights &#8594;</div>';
+  document.getElementById('maxesBar').innerHTML=anyMax?
+    MAXCFG.filter(function(c){return mx[c.k]>0}).map(function(c){return '<span class="max-chip">'+MAXSHORT[c.k]+': '+mx[c.k]+'kg</span>'}).join(''):'';
+  document.getElementById('weekNav').innerHTML=Array.from({length:12},function(_,i){
+    var w=i+1;
+    return '<button class="wbtn'+(CW===w?' on':'')+'" onclick="sw('+w+')">W'+w+'</button>';
+  }).join('');
+  document.getElementById('wLabel').textContent='Week '+CW;
+  var ph=CW<=4?0:CW<=8?1:CW<=11?2:3;
+  var pb=document.getElementById('phaseBadge');
+  pb.textContent=PHASE_LABELS[ph];
+  pb.className='phase-badge ph-'+ph;
+  document.getElementById('wTheme').textContent=THEMES[CW-1];
+  document.getElementById('dayTabs').innerHTML=DLABELS.map(function(l,i){
+    var d=i+1;
+    return '<button class="dtab'+(CD===d?' on':'')+'" onclick="sd('+d+')">'+l+'</button>';
+  }).join('');
+  document.getElementById('dayPanel').innerHTML=rtable(CW,CD);
+}
+function sw(w){CW=w;render()}
+function sd(d){CD=d;render()}
+
+// ── PROGRAMME GENERATOR ──────────────────────────────────────────────────────
+function buildWeek(w){
+  var ph=w<=4?0:w<=8?1:w<=11?2:3;
+  var pcts=[65,67.5,70,72.5,75,77.5,80,82.5,85,87.5,90,null];
+  var pct=pcts[w-1];
+  var isTest=w===12;
+  var ms=function(r){return isTest?{test:true}:{p:pct,r:r}};
+  var msr=isTest?'Work to heavy single':['5x5','4x4','3x3'][Math.min(ph,2)];
+  var dlsr=isTest?'Work to heavy single':['5x3','4x3','3x2'][Math.min(ph,2)];
+  var sb=w<=6?60:80;
+  var isNew=ph>0&&[5,9,12].indexOf(w)>-1;
+
+  // Accessory volume by phase
+  var lpd=['3x12','4x10','4x8'][Math.min(ph,2)];
+  var skull=['3x12','3x10','3x8'][Math.min(ph,2)];
+  var crow=['4x10','4x8','4x6'][Math.min(ph,2)];
+  var curl=['3x12','3x10','3x8'][Math.min(ph,2)];
+  var tri=['3x15','3x12','3x10'][Math.min(ph,2)];
+  var mace=['3x10 each','3x12 each','3x15 each'][Math.min(ph,2)];
+  var ssbs=['3x8','4x6','3x5'][Math.min(ph,2)];
+
+  // Sandbag volume
+  var sbDLsr=w<=6?'5x3':w<=8?'4x3':'4x3';
+  var sbShsr=w<=6?'5x3 each':w<=8?'4x3 each':'3x3 each';
+  var sbCarry=w<=4?'4x20m':w<=6?'4x25m':w<=8?'4x20m':'4x25m';
+  var sbHold=w<=4?'4x30s':w<=6?'4x40s':w<=8?'4x30s':'4x40s';
+  var sbZerch=w<=4?'3x30s':w<=6?'3x40s':w<=8?'3x30s':'3x40s';
+
+  // Notes by phase
+  var sqN=['Film from the side. Check depth and knee tracking each set.','Heavier loads — same standards. Drive knees out, chest up.','Max intensity. Every rep with full focus and intent.','Warm up thoroughly. Singles at 70 / 80 / 90 / 95% then go for it.'][ph];
+  var bN=['Set up the same every single time. Arch, leg drive, tight wrists.','Increase load. Wrists vertical over elbows throughout.','Low reps, high tension. Control the descent — no bouncing.','Work up methodically. Reset and breathe between every attempt.'][ph];
+  var dlN=['Lats tight, big breath, drive floor away. Slow and deliberate.','Heavier now. Same setup every rep. No rushing.','Near-max territory. Full reset between every rep.','Take your time between singles. Film from the side.'][ph];
+  var ohpN=['Vertical torso, full lockout every rep. No leg drive.','Heavier loads — brace harder. Bar path stays vertical.','Max effort. Squeeze glutes and abs hard before each rep.','Warm up shoulders well. Build up single attempts carefully.'][ph];
+
+  if(isTest){
+    return{
+      1:[
+        ['Back Squat','Build to heavy single','1-3 singles',{test:true},'As needed',sqN,false],
+        ['SSB Good Morning','','2x10',{e:6},'90s','Light. Stay loose after heavy squats.',false],
+        ['Lat Pulldown','',lpd,{e:7},'60s','',false],
+        ['Club Halo','plate-loaded','2x10 each',{e:7},'60s','',false],
+      ],
+      2:[
+        ['Bench Press','Build to heavy single','1-3 singles',{test:true},'As needed',bN,false],
+        ['Cable Row','','3x10',{e:7},'60s','',false],
+        ['EZ Bar Curl','','3x10',{e:7},'60s','',false],
+        ['Sandbag Bear Hug Hold',sb+'kg bag','3x30s',{bag:sb},'90s','Grip finisher.',false],
+      ],
+      3:[
+        ['Deadlift','Build to heavy single','1-3 singles',{test:true},'As needed',dlN,false],
+        ['SSB Squat','','2x8',{e:6},'2 min','Light.',false],
+        ['Tricep Pushdown','','3x12',{e:7},'60s','',false],
+      ],
+      4:[
+        ['Strict Press','Build to heavy single','1-3 singles',{test:true},'As needed',ohpN,false],
+        ['Bench Press','secondary','3x8',{e:7},'2 min','Sub-max. Control the descent.',false],
+        ['Sandbag Bear Hug Carry',sb+'kg bag','3x20m',{bag:sb},'2 min','Final session. Make it count.',false],
+        ['Plate Mace Swing','','3x10 each',{e:7},'60s','',false],
+      ],
+    };
+  }
+
+  return{
+    1:[
+      ['Back Squat','',msr,ms('sq'),'3-5 min',sqN,isNew],
+      ['SSB Good Morning','','3x10',{e:6},'90s','Activation. Slight knee bend, load hamstrings, brace hard.',false],
+      ['Sandbag Deadlift',sb+'kg bag',sbDLsr,{bag:sb},'2 min','Double overhand. Slow eccentric, pause and reset at floor.',false],
+      ['Lat Pulldown','',lpd,{e:7},'60s','Drive elbows down and back. Squeeze at bottom.',false],
+      ['Club Halo','plate-loaded','3x10 each',{e:7},'60s','Slow and deliberate. Grip hard throughout.',false],
+    ],
+    2:[
+      ['Bench Press','',msr,ms('bench'),'3-5 min',bN,isNew],
+      ['EZ Bar Skull Crusher','','3x12',{e:7},'90s','Slow eccentric. Elbows stay in.',false],
+      ['Cable Row','',crow,{e:7},'60s','Drive elbows back. Pause at contraction.',false],
+      ['EZ Bar Curl','',curl,{e:7},'60s','No swinging.',false],
+      ['Sandbag Bear Hug Hold',sb+'kg bag',sbHold,{bag:sb},'90s','Squeeze hard. No resting on belly. Grip is the focus.',false],
+    ],
+    3:[
+      ['Deadlift','',dlsr,ms('dl'),'4-5 min',dlN,isNew],
+      ['SSB Squat','secondary',ssbs,{e:6},'2 min','Upright torso. Upper back braced. Not going to failure.',false],
+      ['Sandbag Shoulder',sb+'kg bag',sbShsr,{bag:sb},'2 min','Pick, load onto shoulder, controlled return. Alternate sides.',false],
+      ['Tricep Pushdown','',tri,{e:7},'60s','',false],
+      ['KB Dead Row','24kg — strict','3x10 each',{e:7},'60s','Elbow close to body. Pause at top.',false],
+    ],
+    4:[
+      ['Strict Press','',msr,ms('ohp'),'3-5 min',ohpN,isNew],
+      ['Bench Press','secondary — sub-max','3x8',{e:7},'2 min','Control the descent.',false],
+      ['Sandbag Bear Hug Carry',sb+'kg bag',sbCarry,{bag:sb},'2 min','Tight squeeze. Short controlled steps. Keep chest up.',false],
+      ['Plate Mace Swing','',mace,{e:7},'60s','Control the arc. Grip hard at end range.',false],
+      ['Sandbag Zercher Hold',sb+'kg bag',sbZerch,{bag:sb},'90s','Arms under bag, chest up. Total body tension.',false],
+    ],
+  };
 }
 
-// Boot: load all saved logs first, then render
-loadAllLogs().then(() => render());
+// Build all 12 weeks
+var DATA={};
+for(var _w=1;_w<=12;_w++){
+  var _d=buildWeek(_w);
+  DATA[_w]={1:_d[1],2:_d[2],3:_d[3],4:_d[4]};
+}
+
+render();
 </script>
 </body>
 </html>
