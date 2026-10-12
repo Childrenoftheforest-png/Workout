@@ -312,200 +312,13 @@ function buildWeek(w){
         ['Back Squat','Build to heavy single','1-3 singles',{test:true},'As needed',sqN,false],
         ['SSB Good Morning','','2x10',{e:6},'90s','Light. Stay loose after heavy squats.',false],
         ['Lat Pulldown','',lpd,{e:7},'60s','',false],
-        ['Club Halo','plate-loaded','veAndClose()">Save</button>
-    </div>
-  </div>
-</div>
-
-<div class="main">
-  <div id="promptBar"></div>
-  <div class="legend">
-    <span class="leg-item"><span class="leg-dot" style="background:var(--green)"></span>Calculated from max</span>
-    <span class="leg-item"><span class="leg-dot" style="background:var(--acc)"></span>Sets x Reps</span>
-    <span class="leg-item"><span class="leg-dot" style="background:var(--blue)"></span>Log what you used</span>
-    <span class="leg-item"><span class="leg-dot" style="background:var(--orange)"></span>Sandbag</span>
-    <span class="leg-item"><span class="leg-dot" style="background:var(--green)"></span>Test week</span>
-  </div>
-  <div class="week-nav" id="weekNav"></div>
-  <div class="wsummary">
-    <span class="wlabel" id="wLabel"></span>
-    <span id="phaseBadge" class="phase-badge"></span>
-    <span class="wtheme" id="wTheme"></span>
-  </div>
-  <div class="day-tabs" id="dayTabs"></div>
-  <div class="dpanel" id="dayPanel"></div>
-</div>
-
-<script>
-var MAXCFG=[
-  {k:'sq',    label:'Squat',       sub:'Back squat 1RM'},
-  {k:'bench', label:'Bench Press', sub:'Flat bench 1RM'},
-  {k:'dl',    label:'Deadlift',    sub:'Conventional DL 1RM'},
-  {k:'ohp',   label:'OHP',         sub:'Strict overhead press 1RM'},
-];
-var MAXFULL={sq:'Squat',dl:'Deadlift',bench:'Bench',ohp:'OHP'};
-var MAXSHORT={sq:'SQ',bench:'Bench',dl:'DL',ohp:'OHP'};
-var THEMES=[
-  'Foundation — establish your positions',
-  'Foundation — drill the basics',
-  'Foundation — add load, maintain standards',
-  'Foundation — strong finish before the step up',
-  'Build — heavier loads, same standards',
-  'Build — consistency over everything',
-  'Build — pushing the range',
-  'Build — peak of the build phase',
-  'Peak — low volume, high intensity',
-  'Peak — finding your limits',
-  'Peak — final heavy week',
-  'Test week — find your true maxes',
-];
-var DLABELS=['Day 1 — Squat','Day 2 — Bench','Day 3 — Deadlift','Day 4 — OHP + Sandbag'];
-var PHASE_LABELS=['Foundation','Build','Peak','Test'];
-
-var CW=1,CD=1;
-
-function gmx(){try{return JSON.parse(localStorage.getItem('s12_mx')||'{}')}catch{return{}}}
-function smx(m){localStorage.setItem('s12_mx',JSON.stringify(m))}
-function glog(k){return localStorage.getItem('s12_lg_'+k)||''}
-function slog(k,v){v?localStorage.setItem('s12_lg_'+k,String(v)):localStorage.removeItem('s12_lg_'+k)}
-
-function openModal(){
-  var mx=gmx();
-  document.getElementById('mgrid').innerHTML=MAXCFG.map(function(c){
-    return '<div class="mfield"><div class="mlabel">'+c.label+'</div>'+(c.sub?'<div class="msub">'+c.sub+'</div>':'')+'<div class="mwrap"><input class="minput" type="number" step="2.5" min="0" id="mi_'+c.k+'" value="'+(mx[c.k]||'')+'" placeholder="0"><span class="munit">kg</span></div></div>';
-  }).join('');
-  document.getElementById('overlay').classList.add('open');
-}
-function closeModal(){document.getElementById('overlay').classList.remove('open')}
-function saveAndClose(){
-  var m={};
-  MAXCFG.forEach(function(c){m[c.k]=parseFloat(document.getElementById('mi_'+c.k).value)||0});
-  smx(m);closeModal();render();
-}
-function clearLogs(){
-  if(!confirm('Delete all logged weights? Cannot be undone.'))return;
-  Object.keys(localStorage).filter(function(k){return k.startsWith('s12_lg_')}).forEach(function(k){localStorage.removeItem(k)});
-  render();
-}
-document.getElementById('overlay').addEventListener('click',function(e){if(e.target===this)closeModal()});
-
-function wcell(spec,w,d,i){
-  var mx=gmx();
-  var lk=w+'_'+d+'_'+i;
-  var logged=glog(lk);
-  var prev=w>1?glog((w-1)+'_'+d+'_'+i):'';
-
-  if(spec&&spec.p){
-    var mv=mx[spec.r]||0;
-    var nm=MAXFULL[spec.r]||spec.r;
-    if(mv>0){
-      var kg=Math.round(mv*spec.p/100/2.5)*2.5;
-      return '<div class="ckg">'+kg+'kg</div><div class="cpct">'+spec.p+'% '+nm+'</div>';
-    }
-    return '<div class="nomax">'+spec.p+'% '+nm+'</div><button class="addmax" onclick="openModal()">Set your max &#8599;</button>';
-  }
-  if(spec&&spec.test){
-    var ph=prev?'<div class="prevlog">&#8593; W'+(w-1)+': '+prev+'kg</div>':'';
-    return '<div class="testkg">Build to heavy single</div><input class="loginput" type="number" step="2.5" min="0" value="'+logged+'" placeholder="achieved kg" oninput="slog(\''+lk+'\',this.value)">'+ph;
-  }
-  if(spec&&spec.bag){
-    var ph2=prev?'<div class="prevlog">&#8593; W'+(w-1)+': '+prev+'</div>':'';
-    return '<div class="bagkg">'+spec.bag+'kg bag</div><input class="loginput loginput-txt" type="text" value="'+logged+'" placeholder="notes" oninput="slog(\''+lk+'\',this.value)">'+ph2;
-  }
-  if(spec&&spec.e){
-    var ph3=prev?'<div class="prevlog">&#8593; W'+(w-1)+': '+prev+'kg</div>':'';
-    return '<span class="rpebdg">RPE '+spec.e+'</span><input class="loginput" type="number" step="any" min="0" value="'+logged+'" placeholder="kg" oninput="slog(\''+lk+'\',this.value)">'+ph3;
-  }
-  var label=spec==='bw'?'Bodyweight':(spec||'—');
-  return '<span class="bwtag">'+label+'</span>';
-}
-
-function rtable(w,d){
-  var rows=DATA[w][d].map(function(ex,i){
-    var nm=ex[0],mod=ex[1],sr=ex[2],ws=ex[3],rest=ex[4],notes=ex[5],isNew=ex[6];
-    var noteHtml=notes?notes.split('. ').filter(Boolean).map(function(s){return s+'.'}).join('<br>'):'';
-    return '<tr>'
-      +'<td><div class="exname">'+nm+(isNew?'<span class="nbdg">Phase up</span>':'')+'</div>'+(mod?'<div class="exmod">'+mod+'</div>':'')+'</td>'
-      +'<td><span class="srbdg">'+sr+'</span></td>'
-      +'<td>'+wcell(ws,w,d,i)+'</td>'
-      +'<td class="restcell">'+rest+'</td>'
-      +'<td class="notecell">'+noteHtml+'</td>'
-      +'</tr>';
-  }).join('');
-  return '<table><thead><tr><th>Exercise</th><th>Sets x Reps</th><th>Weight</th><th>Rest</th><th>Notes</th></tr></thead><tbody>'+rows+'</tbody></table>';
-}
-
-function render(){
-  var mx=gmx();
-  var anyMax=Object.values(mx).some(function(v){return v>0});
-  document.getElementById('promptBar').innerHTML=anyMax?'':'<div class="prompt-bar" onclick="openModal()">&#9889; Add your 1RM maxes to auto-calculate training weights &#8594;</div>';
-  document.getElementById('maxesBar').innerHTML=anyMax?
-    MAXCFG.filter(function(c){return mx[c.k]>0}).map(function(c){return '<span class="max-chip">'+MAXSHORT[c.k]+': '+mx[c.k]+'kg</span>'}).join(''):'';
-  document.getElementById('weekNav').innerHTML=Array.from({length:12},function(_,i){
-    var w=i+1;
-    return '<button class="wbtn'+(CW===w?' on':'')+'" onclick="sw('+w+')">W'+w+'</button>';
-  }).join('');
-  document.getElementById('wLabel').textContent='Week '+CW;
-  var ph=CW<=4?0:CW<=8?1:CW<=11?2:3;
-  var pb=document.getElementById('phaseBadge');
-  pb.textContent=PHASE_LABELS[ph];
-  pb.className='phase-badge ph-'+ph;
-  document.getElementById('wTheme').textContent=THEMES[CW-1];
-  document.getElementById('dayTabs').innerHTML=DLABELS.map(function(l,i){
-    var d=i+1;
-    return '<button class="dtab'+(CD===d?' on':'')+'" onclick="sd('+d+')">'+l+'</button>';
-  }).join('');
-  document.getElementById('dayPanel').innerHTML=rtable(CW,CD);
-}
-function sw(w){CW=w;render()}
-function sd(d){CD=d;render()}
-
-// ── PROGRAMME GENERATOR ──────────────────────────────────────────────────────
-function buildWeek(w){
-  var ph=w<=4?0:w<=8?1:w<=11?2:3;
-  var pcts=[65,67.5,70,72.5,75,77.5,80,82.5,85,87.5,90,null];
-  var pct=pcts[w-1];
-  var isTest=w===12;
-  var ms=function(r){return isTest?{test:true}:{p:pct,r:r}};
-  var msr=isTest?'Work to heavy single':['5x5','4x4','3x3'][Math.min(ph,2)];
-  var dlsr=isTest?'Work to heavy single':['5x3','4x3','3x2'][Math.min(ph,2)];
-  var sb=w<=6?60:80;
-  var isNew=ph>0&&[5,9,12].indexOf(w)>-1;
-
-  // Accessory volume by phase
-  var lpd=['3x12','4x10','4x8'][Math.min(ph,2)];
-  var skull=['3x12','3x10','3x8'][Math.min(ph,2)];
-  var crow=['4x10','4x8','4x6'][Math.min(ph,2)];
-  var curl=['3x12','3x10','3x8'][Math.min(ph,2)];
-  var tri=['3x15','3x12','3x10'][Math.min(ph,2)];
-  var mace=['3x10 each','3x12 each','3x15 each'][Math.min(ph,2)];
-  var ssbs=['3x8','4x6','3x5'][Math.min(ph,2)];
-
-  // Sandbag volume
-  var sbDLsr=w<=6?'5x3':w<=8?'4x3':'4x3';
-  var sbShsr=w<=6?'5x3 each':w<=8?'4x3 each':'3x3 each';
-  var sbCarry=w<=4?'4x20m':w<=6?'4x25m':w<=8?'4x20m':'4x25m';
-  var sbHold=w<=4?'4x30s':w<=6?'4x40s':w<=8?'4x30s':'4x40s';
-  var sbZerch=w<=4?'3x30s':w<=6?'3x40s':w<=8?'3x30s':'3x40s';
-
-  // Notes by phase
-  var sqN=['Film from the side. Check depth and knee tracking each set.','Heavier loads — same standards. Drive knees out, chest up.','Max intensity. Every rep with full focus and intent.','Warm up thoroughly. Singles at 70 / 80 / 90 / 95% then go for it.'][ph];
-  var bN=['Set up the same every single time. Arch, leg drive, tight wrists.','Increase load. Wrists vertical over elbows throughout.','Low reps, high tension. Control the descent — no bouncing.','Work up methodically. Reset and breathe between every attempt.'][ph];
-  var dlN=['Lats tight, big breath, drive floor away. Slow and deliberate.','Heavier now. Same setup every rep. No rushing.','Near-max territory. Full reset between every rep.','Take your time between singles. Film from the side.'][ph];
-  var ohpN=['Vertical torso, full lockout every rep. No leg drive.','Heavier loads — brace harder. Bar path stays vertical.','Max effort. Squeeze glutes and abs hard before each rep.','Warm up shoulders well. Build up single attempts carefully.'][ph];
-
-  if(isTest){
-    return{
-      1:[
-        ['Back Squat','Build to heavy single','1-3 singles',{test:true},'As needed',sqN,false],
-        ['SSB Good Morning','','2x10',{e:6},'90s','Light. Stay loose after heavy squats.',false],
-        ['Lat Pulldown','',lpd,{e:7},'60s','',false],
         ['Club Halo','plate-loaded','2x10 each',{e:7},'60s','',false],
       ],
       2:[
         ['Bench Press','Build to heavy single','1-3 singles',{test:true},'As needed',bN,false],
         ['Cable Row','','3x10',{e:7},'60s','',false],
-        ['EZ Bar Curl','','3x10',{e:7},'60s','',false],
+        ['DB Bicep Curl','alternating','3x12',{e:7},'60s','',false],
+        ['DB Lateral Raise','strict','3x15',{e:7},'60s','',false],
         ['Sandbag Bear Hug Hold',sb+'kg bag','3x30s',{bag:sb},'90s','Grip finisher.',false],
       ],
       3:[
@@ -515,7 +328,9 @@ function buildWeek(w){
       ],
       4:[
         ['Strict Press','Build to heavy single','1-3 singles',{test:true},'As needed',ohpN,false],
-        ['Bench Press','secondary','3x8',{e:7},'2 min','Sub-max. Control the descent.',false],
+        ['DB Arnold Press','','3x10',{e:7},'90s','Full range. Control throughout.',false],
+        ['DB Lateral Raise','strict','3x15',{e:7},'60s','',false],
+        ['DB Overhead Tricep Extension','','3x12',{e:7},'60s','',false],
         ['Sandbag Bear Hug Carry',sb+'kg bag','3x20m',{bag:sb},'2 min','Final session. Make it count.',false],
         ['Plate Mace Swing','','3x10 each',{e:7},'60s','',false],
       ],
@@ -528,25 +343,31 @@ function buildWeek(w){
       ['SSB Good Morning','','3x10',{e:6},'90s','Activation. Slight knee bend, load hamstrings, brace hard.',false],
       ['Sandbag Deadlift',sb+'kg bag',sbDLsr,{bag:sb},'2 min','Double overhand. Slow eccentric, pause and reset at floor.',false],
       ['Lat Pulldown','',lpd,{e:7},'60s','Drive elbows down and back. Squeeze at bottom.',false],
+      ['DB Hammer Curl','both arms',dbhammer,{e:7},'60s','Neutral grip. No swinging. Squeeze at top.',false],
       ['Club Halo','plate-loaded','3x10 each',{e:7},'60s','Slow and deliberate. Grip hard throughout.',false],
     ],
     2:[
       ['Bench Press','',msr,ms('bench'),'3-5 min',bN,isNew],
-      ['EZ Bar Skull Crusher','','3x12',{e:7},'90s','Slow eccentric. Elbows stay in.',false],
+      ['DB Incline Press','30-45 degree incline',dbpress,{e:7},'90s','Upper chest focus. Control the descent, press to full lockout.',false],
+      ['EZ Bar Skull Crusher','',skull,{e:7},'90s','Slow eccentric. Elbows stay in.',false],
+      ['DB Lateral Raise','strict',dblat,{e:7},'60s','Lead with elbows. Stop at shoulder height. No momentum.',false],
       ['Cable Row','',crow,{e:7},'60s','Drive elbows back. Pause at contraction.',false],
-      ['EZ Bar Curl','',curl,{e:7},'60s','No swinging.',false],
+      ['DB Bicep Curl','alternating',dbcurl,{e:7},'60s','Full range. Supinate at the top.',false],
       ['Sandbag Bear Hug Hold',sb+'kg bag',sbHold,{bag:sb},'90s','Squeeze hard. No resting on belly. Grip is the focus.',false],
     ],
     3:[
       ['Deadlift','',dlsr,ms('dl'),'4-5 min',dlN,isNew],
       ['SSB Squat','secondary',ssbs,{e:6},'2 min','Upright torso. Upper back braced. Not going to failure.',false],
       ['Sandbag Shoulder',sb+'kg bag',sbShsr,{bag:sb},'2 min','Pick, load onto shoulder, controlled return. Alternate sides.',false],
-      ['Tricep Pushdown','',tri,{e:7},'60s','',false],
+      ['Tricep Pushdown','',tri,{e:7},'60s','Elbows pinned. Full extension at bottom.',false],
+      ['DB Overhead Tricep Extension','both hands on one DB',dbtri,{e:7},'60s','Elbows close to head. Slow eccentric.',false],
       ['KB Dead Row','24kg — strict','3x10 each',{e:7},'60s','Elbow close to body. Pause at top.',false],
     ],
     4:[
       ['Strict Press','',msr,ms('ohp'),'3-5 min',ohpN,isNew],
-      ['Bench Press','secondary — sub-max','3x8',{e:7},'2 min','Control the descent.',false],
+      ['DB Arnold Press','seated or standing',dbpress,{e:7},'90s','Rotate from palms-in to palms-out as you press. Full range.',false],
+      ['DB Lateral Raise','strict',dblat,{e:7},'60s','Lead with elbows. Pause briefly at top.',false],
+      ['DB Front Raise','alternating',dbfp,{e:7},'60s','Controlled. Dont let shoulders creep up.',false],
       ['Sandbag Bear Hug Carry',sb+'kg bag',sbCarry,{bag:sb},'2 min','Tight squeeze. Short controlled steps. Keep chest up.',false],
       ['Plate Mace Swing','',mace,{e:7},'60s','Control the arc. Grip hard at end range.',false],
       ['Sandbag Zercher Hold',sb+'kg bag',sbZerch,{bag:sb},'90s','Arms under bag, chest up. Total body tension.',false],
